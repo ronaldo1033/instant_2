@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <style>
+        /* Estilos CSS para el chat */
+        #chat {
+            overflow-y: scroll;
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat"></div>
+    <input type="text" id="messageInput" placeholder="Escribe tu mensaje...">
+    <button onclick="sendMessage()">Enviar</button>
+
+    <script>
+        // JavaScript para el chat
+        const ws = new WebSocket(`ws://${window.location.host}`);
+
+        ws.onmessage = function(event) {
+            const message = event.data;
+            const chat = document.getElementById('chat');
+            const messageElement = document.createElement('div');
+            messageElement.textContent = message;
+            chat.appendChild(messageElement);
+        };
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
+            ws.send(message);
+            messageInput.value = '';
+        }
+    </script>
+</body>
+</html>
